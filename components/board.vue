@@ -8,6 +8,7 @@
              :class="{'bg-gray-300':item.readonly,
              'bg-yellow-300': helpNumber === item.value && item.value!== null}">
           <input type="number"
+                 pattern="\d*"
                  @keypress="isNumber"
                  v-model.number="puzzle[index][column].value"
                  :readonly="item.readonly"
@@ -20,7 +21,7 @@
     <div>
       <button
         class="rounded w-8 rounded-full
-        border-gray-400 border pt-1 pb-1 pr-2 pl-2 m-2"
+        border-gray-400 border pt-1 pb-1 pr-1 pl-1 m-1"
         v-for="num in helperNumberOptions"
         :class="{'bg-yellow-300': helpNumber === num, 'bg-blue-200': helpNumber !== num}"
         :key="num" @click="boldNumber(num)">{{num}}
@@ -148,7 +149,7 @@ export default class Board extends Vue {
     font-size: 2rem;
     border: none;
     @media only screen and (max-width: 600px)  {
-      height: 30px;
+      height: 35px;
       width: 30px;
       font-size: 1.2rem;
 
