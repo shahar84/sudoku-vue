@@ -1,6 +1,6 @@
 <template>
   <div class="section">
-    {{isSolved}}
+    <h2 class="text-2xl" v-if="isSolved">You solved it!</h2>
     <section class="board">
       <div v-for="(row, index) in puzzle" :key="index" class="board__row">
         <div v-for="(item, column) in row" :key="`${index}_${column}`"
@@ -70,7 +70,7 @@ export default class Board extends Vue {
   }
 
   newGame () {
-    // const rawPuzzle = makepuzzle()
+    const rawPuzzle = makepuzzle()
 
     const rawSolvePuzzle = solvepuzzle(rawPuzzle)
     const fixedSolvePuzzle = rawSolvePuzzle.map(fixPuzzle)
@@ -103,6 +103,8 @@ export default class Board extends Vue {
 
 </script>
 <style scoped lang="scss">
+
+
   .board {
     display: block;
     text-align: center;
@@ -111,7 +113,7 @@ export default class Board extends Vue {
 
     .board__row {
       display: grid;
-      grid-template-columns: repeat(9, 60px);
+      grid-template-columns: repeat(9, 1fr);
       box-sizing: border-box;
       position: relative;
 
@@ -145,6 +147,13 @@ export default class Board extends Vue {
     width: 60px;
     font-size: 2rem;
     border: none;
+    @media only screen and (max-width: 600px)  {
+      height: 30px;
+      width: 30px;
+      font-size: 1.2rem;
+
+    }
+
   }
 
   input:read-only {
