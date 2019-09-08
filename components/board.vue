@@ -3,20 +3,30 @@
     {{isSolved}}
     <section class="board">
       <div v-for="(row, index) in puzzle" :key="index" class="board__row">
-        <div v-for="(value, column) in row" :key="`${index}_${column}`"
+        <div v-for="(item, column) in row" :key="`${index}_${column}`"
              class="board__column border border-gray-400"
-             :class="{'bg-gray-300':value.readonly}">
+             :class="{'bg-gray-300':item.readonly,
+             'bg-yellow-300': helpNumber === item.value && item.value!== null}">
           <input type="number"
                  @keypress="isNumber"
-                 v-model="puzzle[index][column].value"
+                 v-model.number="puzzle[index][column].value"
+                 :readonly="item.readonly"
+                 :disabled="item.readonly">
 
-          >
-          <!--          :readonly="value.readonly"-->
-          <!--          :disabled="value.readonly"-->
         </div>
       </div>
     </section>
     <button @click="cheat">cheat</button>
+    <div>
+      <button
+        class="rounded w-8 rounded-full
+        border-gray-400 border pt-1 pb-1 pr-2 pl-2 m-2"
+        v-for="num in helperNumberOptions"
+        :class="{'bg-yellow-300': helpNumber === num, 'bg-blue-200': helpNumber !== num}"
+        :key="num" @click="boldNumber(num)">{{num}}
+      </button>
+    </div>
+
   </div>
 </template>
 <script>
@@ -48,19 +58,29 @@ const puzzle = generatePuzzle(rawPuzzle)
 export default class Board extends Vue {
   puzzle = null
   solvePuzzle = null
+  helperNumberOptions = Array.from({ length: 9 }, (v, k) => k + 1)
+  helpNumber = null
 
   mounted () {
+    this.newGame()
+  }
+
+  boldNumber (num) {
+    this.helpNumber = this.helpNumber === parseInt(num) ? null : parseInt(num)
+  }
+
+  newGame () {
     // const rawPuzzle = makepuzzle()
+
     const rawSolvePuzzle = solvepuzzle(rawPuzzle)
     const fixedSolvePuzzle = rawSolvePuzzle.map(fixPuzzle)
     const fixedPuzzle = rawPuzzle.map(fixPuzzle)
     this.puzzle = generatePuzzle(fixedPuzzle)
     this.solvePuzzle = fixedSolvePuzzle
-    console.log(this.solvePuzzle)
   }
 
   isNumber (event) {
-    const value = event.target.value
+    const value = event.target.value;
     const re = new RegExp('^([1-9])$')
     if (re.test(value)) {
       return event.preventDefault()
