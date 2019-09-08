@@ -9,9 +9,10 @@
           <input type="number"
                  @keypress="isNumber"
                  v-model="puzzle[index][column].value"
-                 :readonly="value.readonly"
-                 :disabled="value.readonly"
+
           >
+          <!--          :readonly="value.readonly"-->
+          <!--          :disabled="value.readonly"-->
         </div>
       </div>
     </section>
@@ -54,9 +55,8 @@ export default class Board extends Vue {
     const fixedSolvePuzzle = rawSolvePuzzle.map(fixPuzzle)
     const fixedPuzzle = rawPuzzle.map(fixPuzzle)
     this.puzzle = generatePuzzle(fixedPuzzle)
-    this.solvePuzzle = generatePuzzle(fixedSolvePuzzle)
+    this.solvePuzzle = fixedSolvePuzzle
     console.log(this.solvePuzzle)
-    // console.log(rawSolvePuzzle)
   }
 
   isNumber (event) {
@@ -68,16 +68,15 @@ export default class Board extends Vue {
   }
 
   cheat () {
-    this.puzzle = JSON.parse(JSON.stringify(this.solvePuzzle))
+    this.puzzle = generatePuzzle(this.solvePuzzle)
   }
 
   get isSolved () {
     if (!this.solvePuzzle || !this.puzzle) {
       return false
     }
-    const solved = this.solvePuzzle.flat().map(item => item.value)
-    const puzzle = this.puzzle.flat().map(item => item.value)
-    return isEqual(solved, puzzle)
+    const puzzle = this.puzzle.flat().map(item => item.value ? parseInt(item.value) : null)
+    return isEqual(this.solvePuzzle, puzzle)
   }
 }
 
