@@ -1,13 +1,13 @@
 <template>
   <section>
     <div class="radial-input-wrapper" :style="buttonWrapperStyle">
-      <button @click="active=!active" class="activation-button">
+      <button @click="isOpen=!isOpen" class="activation-button">
         <slot>+</slot>
       </button>
       <ul class="circle-container" :style="parentStyle">
         <li v-for="(item, index) in items" :key="item"
             :style="itemStyle(index)" class="item">
-          <button @click="handleClick">
+          <button @click="handleClick(item)">
             {{item}}
           </button>
         </li>
@@ -32,13 +32,12 @@ const directionOptions = Object.freeze({
   }
 })
 export default class RadialInput extends Vue {
-  active = false
   isOpen = false
-  circleSize = 300
+  circleSize = 260
   itemSize = 60
   buttonSize = 60
   items = [1, 2, 3, 4, 5, 6, 7, 8, 9]
-  direction = directionOptions.FULL
+  direction = directionOptions.RIGHT
   manualMode
 
   mounted () {
@@ -68,8 +67,8 @@ export default class RadialInput extends Vue {
     }
   }
 
-  handleClick () {
-    this.$emit('click')
+  handleClick (item) {
+    this.$emit('click', item)
     this.toggleMenu()
   }
 
@@ -96,7 +95,7 @@ export default class RadialInput extends Vue {
   }
 
   get parentStyle () {
-    const pointerEvents = this.active ? 'auto' : 'none'
+    const pointerEvents = this.isOpen ? 'auto' : 'none'
     return {
       position: 'absolute',
       width: `${this.circleSize}px`,
@@ -105,7 +104,7 @@ export default class RadialInput extends Vue {
       borderRadius: '50%',
       listStyle: 'none',
       boxSizing: 'content-box',
-      border: 'solid 5px tomato',
+      // border: 'solid 5px tomato',
       pointerEvents
     }
   }
@@ -117,13 +116,13 @@ export default class RadialInput extends Vue {
   itemStyle (index) {
     const rotate = (index * this.angle) - 90
     const margin = -(this.itemSize / 2)
-    const translate = this.active ? this.halfParent : 0
-    const opacity = this.active ? 1 : 0
-    const transform = this.active ?
+    const translate = this.isOpen ? this.halfParent : 0
+    const opacity = this.isOpen ? 1 : 0
+    const transform = this.isOpen ?
       `rotate(${rotate}deg)  translate(${translate}px) scale(1) rotate(${rotate * -1}deg)` :
       `rotate(-90deg) scale(0.8)`
-    const transition = this.active ? '0.3s all' : '0.5s all'
-    const pointerEvents = this.active ? 'auto' : 'none'
+    const transition = this.isOpen ? '0.3s all' : '0.5s all'
+    const pointerEvents = this.isOpen ? 'auto' : 'none'
 
     return {
       display: 'flex',
@@ -150,14 +149,17 @@ export default class RadialInput extends Vue {
 <style scoped lang="scss">
   .radial-input-wrapper {
     position: relative;
-    background: #F5F5F5;
     display: flex;
     justify-content: center;
     align-items: center;
+
     button.activation-button {
       background: #35495e;
       width: 100%;
       height: 100%;
+      border-radius: 50%;
+      position: relative;
+      z-index: 2;
     }
   }
 
