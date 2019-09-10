@@ -20,25 +20,18 @@
                    :readonly="item.readonly"
                    :disabled="item.readonly">
           </template>
-          <template v-else>
-            <span class="selected-value text-2xl text-gray-800" >
+
+          <template v-else-if="true">
+            <radial-input :direction="inputDirection(column)"
+                          :button-size="isMobile? 30:60"
+                          :item-size="isMobile? 30:60"
+                          :circle-size="isMobile? 120:260"
+                          v-on:click="(selectedValue) => handleClick(index, column, selectedValue)">
               {{item.value}}
-            </span>
-            <radial-menu
-              :itemSize="40"
-              :radius="75"
-              :angle-restriction="360">
-              <radial-menu-item
-                v-for="(item, i) in helperNumberOptions"
-                :key="i"
-                style="background-color: white"
-                @click="() => handleClick(index, column, item)">
-                <span>{{item}}</span>
-              </radial-menu-item>
-            </radial-menu>
+            </radial-input>
+
+
           </template>
-
-
         </div>
       </div>
     </section>
@@ -61,6 +54,7 @@ import Component from 'vue-class-component'
 import { makepuzzle, solvepuzzle } from 'sudoku'
 import isEqual from 'lodash.isequal'
 import { RadialMenu, RadialMenuItem } from 'vue-radial-menu'
+import RadialInput from '@/components/radial-input'
 
 const fixPuzzle = item => item === null ? null : item + 1
 const rawPuzzle = [null, 8, 2, null, 7, null, 1, null, null, 1, 4, null, null, null, null, null, null, null, null, null, null, 5, null, 6, null, null, null, 3, 7, null, null, null, 0, null, null, null, null, null, null, 7, null, null, null, 6, null, null, null, null, 1, null, null, 3, null, null, null, 6, null, null, null, null, null, 0, 2, null, 0, null, 6, null, 4, null, null, null, null, 5, 4, null, 0, null, null, null, null]
@@ -84,7 +78,8 @@ const puzzle = generatePuzzle(rawPuzzle)
 @Component({
   components: {
     RadialMenu,
-    RadialMenuItem
+    RadialMenuItem,
+    RadialInput
   }
 })
 export default class Board extends Vue {
@@ -97,8 +92,23 @@ export default class Board extends Vue {
     this.newGame()
   }
 
+  get isMobile () {
+    return /Android|webOS|iPhone||iPad|iPod|BlackBerry|IEMobile|Opera Mini/i.test(navigator.userAgent)
+  }
+
+  inputDirection (column) {
+    if (column === 0) {
+      return 'RIGHT'
+    }
+    if (column === 8) {
+      return 'LEFT'
+    }
+
+    return 'FULL'
+  }
+
   handleClick (index, column, item) {
-    this.puzzle[index][column].value = item === '𝗫' ? null: item;
+    this.puzzle[index][column].value = item === '𝗫' ? null : item
   }
 
   boldNumber (num) {
@@ -171,6 +181,7 @@ export default class Board extends Vue {
         display: flex;
         justify-content: center;
         align-items: center;
+
         &.read-only {
           background: rgba(#b06ab3, 0.5);
         }
@@ -187,7 +198,8 @@ export default class Board extends Vue {
             color: transparent;
             opacity: 0;
           }
-          .vue-radial-menu-wrapper{
+
+          .vue-radial-menu-wrapper {
             box-shadow: none;
             border-radius: unset;
             @media only screen and (max-width: 600px) {
@@ -196,7 +208,8 @@ export default class Board extends Vue {
               max-height: 35px;
             }
           }
-          .vue-radial-menu-item{
+
+          .vue-radial-menu-item {
             z-index: 10;
           }
         }
