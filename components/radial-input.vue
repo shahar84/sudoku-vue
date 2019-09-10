@@ -28,16 +28,16 @@ const directionOptions = Object.freeze({
 
 @Component({
   props: {
-    open: { type: Boolean, default: undefined }
+    open: { type: Boolean, default: undefined },
+    direction: { type: String, default: directionOptions.FULL },
+    itemSize: { type: Number, default: 60 },
+    buttonSize: { type: Number, default: 60 },
+    circleSize: { type: Number, default: 260 },
   }
 })
 export default class RadialInput extends Vue {
   isOpen = false
-  circleSize = 260
-  itemSize = 60
-  buttonSize = 60
   items = [1, 2, 3, 4, 5, 6, 7, 8, 9]
-  direction = directionOptions.RIGHT
   manualMode
 
   mounted () {
@@ -129,6 +129,7 @@ export default class RadialInput extends Vue {
       justifyContent: 'center',
       alignItems: 'center',
       position: 'absolute',
+      zIndex:10,
       top: '50%',
       left: '50%',
       width: `${this.itemSize}px`,
@@ -154,7 +155,6 @@ export default class RadialInput extends Vue {
     align-items: center;
 
     button.activation-button {
-      background: #35495e;
       width: 100%;
       height: 100%;
       border-radius: 50%;

@@ -20,6 +20,14 @@
                    :readonly="item.readonly"
                    :disabled="item.readonly">
           </template>
+
+          <template v-else-if="true">
+
+            <radial-input v-on:click="(item) => handleClick(index, column, item)">{{item.value}}</radial-input>
+
+
+          </template>
+
           <template v-else>
             <span class="selected-value text-2xl text-gray-800" >
               {{item.value}}
@@ -61,6 +69,8 @@ import Component from 'vue-class-component'
 import { makepuzzle, solvepuzzle } from 'sudoku'
 import isEqual from 'lodash.isequal'
 import { RadialMenu, RadialMenuItem } from 'vue-radial-menu'
+import RadialInput from '@/components/radial-input'
+
 
 const fixPuzzle = item => item === null ? null : item + 1
 const rawPuzzle = [null, 8, 2, null, 7, null, 1, null, null, 1, 4, null, null, null, null, null, null, null, null, null, null, 5, null, 6, null, null, null, 3, 7, null, null, null, 0, null, null, null, null, null, null, 7, null, null, null, 6, null, null, null, null, 1, null, null, 3, null, null, null, 6, null, null, null, null, null, 0, 2, null, 0, null, 6, null, 4, null, null, null, null, 5, 4, null, 0, null, null, null, null]
@@ -84,7 +94,8 @@ const puzzle = generatePuzzle(rawPuzzle)
 @Component({
   components: {
     RadialMenu,
-    RadialMenuItem
+    RadialMenuItem,
+    RadialInput
   }
 })
 export default class Board extends Vue {

@@ -4,15 +4,13 @@
       <h1 class="title text-4xl">
         sudoku
       </h1>
-      <radial-input v-on:click="handleClose">{{value}}</radial-input>
-      <board v-if="false"/>
+      <board/>
     </div>
   </div>
 </template>
 
 <script>
 import Board from '@/components/board'
-import RadialInput from '@/components/radial-input'
 
 import Vue from 'vue'
 import Component from 'vue-class-component'
@@ -24,10 +22,7 @@ import Component from 'vue-class-component'
   }
 })
 export default class Index extends Vue {
-  value = 0;
-  handleClose(value){
-    this.value=value
-  }
+
 }
 </script>
 
