@@ -23,32 +23,15 @@
 
           <template v-else-if="true">
             <radial-input :direction="inputDirection(column)"
+                          :button-size="isMobile? 30:60"
+                          :item-size="isMobile? 30:60"
+                          :circle-size="isMobile? 120:260"
                           v-on:click="(selectedValue) => handleClick(index, column, selectedValue)">
               {{item.value}}
             </radial-input>
 
 
           </template>
-
-          <template v-else>
-            <span class="selected-value text-2xl text-gray-800">
-              {{item.value}}
-            </span>
-            <radial-menu
-              :itemSize="40"
-              :radius="75"
-              :angle-restriction="360">
-              <radial-menu-item
-                v-for="(item, i) in helperNumberOptions"
-                :key="i"
-                style="background-color: white"
-                @click="() => handleClick(index, column, item)">
-                <span>{{item}}</span>
-              </radial-menu-item>
-            </radial-menu>
-          </template>
-
-
         </div>
       </div>
     </section>
@@ -107,6 +90,10 @@ export default class Board extends Vue {
 
   mounted () {
     this.newGame()
+  }
+
+  get isMobile () {
+    return /Android|webOS|iPhone||iPad|iPod|BlackBerry|IEMobile|Opera Mini/i.test(navigator.userAgent)
   }
 
   inputDirection (column) {
