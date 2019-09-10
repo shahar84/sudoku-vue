@@ -5,8 +5,8 @@
       {{active}}
     </div>
 
-    <ul class="circle-container2" :class="{'active':active}" :style="parentClass">
-      <li v-for="(item, index) in items" :key="item" :style="itemClass(index)">{{item}}</li>
+    <ul class="circle-container2" :class="{'active':active}" :style="parentStyle">
+      <li v-for="(item, index) in items" :key="item" :style="itemStyle(index)">{{item}}</li>
     </ul>
 
 
@@ -28,7 +28,7 @@ export default class RadialInput extends Vue {
   active = false
   circleSize = 300
   itemSize = 60
-  items = [1, 2, 3, 4, 5, 6, 7, 8]
+  items = [1, 2, 3, 4, 5, 6, 7, 8, 9]
   direction = directionOptions.FULL
 
   get angle () {
@@ -46,7 +46,7 @@ export default class RadialInput extends Vue {
     return angle / this.items.length
   }
 
-  get parentClass () {
+  get parentStyle () {
     return {
       position: 'relative',
       width: `${this.circleSize}px`,
@@ -64,7 +64,7 @@ export default class RadialInput extends Vue {
     return this.circleSize / 2
   }
 
-  itemClass (index) {
+  itemStyle (index) {
     const rotate = (index * this.angle) - 90
     const margin = -(this.itemSize / 2)
     const translate = this.active ? this.halfParent : 0
@@ -85,6 +85,7 @@ export default class RadialInput extends Vue {
       height: `${this.itemSize}px`,
       margin: `${margin}px`,
       background: 'gray',
+      borderRadius:'50%',
       transform,
       opacity,
       transition,
