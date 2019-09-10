@@ -1,18 +1,43 @@
 <template>
   <div class="section">
+
+
+    <!--    <div style="color: rgba(0,0,0,0.6); margin-top: 16px;">{{ lastClicked }}</div>-->
+
     <h2 class="text-2xl" v-if="isSolved">You solved it!</h2>
-    <section class="board">
+    <section class="board bg-gray-300">
       <div v-for="(row, index) in puzzle" :key="index" class="board__row">
         <div v-for="(item, column) in row" :key="`${index}_${column}`"
-             class="board__column border border-gray-400"
-             :class="{'bg-gray-300':item.readonly,
+             class="board__column border border-gray-600"
+             :class="{'read-only':item.readonly,
              'bg-yellow-300': helpNumber === item.value && item.value!== null}">
-          <input type="number"
-                 pattern="\d*"
-                 @keypress="isNumber"
-                 v-model.number="puzzle[index][column].value"
-                 :readonly="item.readonly"
-                 :disabled="item.readonly">
+          <template v-if="item.readonly">
+            <input type="number"
+                   class="text-2xl"
+                   pattern="\d*"
+                   @keypress="isNumber"
+                   v-model.number="puzzle[index][column].value"
+                   :readonly="item.readonly"
+                   :disabled="item.readonly">
+          </template>
+          <template v-else>
+            <span class="selected-value text-2xl text-gray-800" >
+              {{item.value}}
+            </span>
+            <radial-menu
+              :itemSize="40"
+              :radius="75"
+              :angle-restriction="360">
+              <radial-menu-item
+                v-for="(item, i) in helperNumberOptions"
+                :key="i"
+                style="background-color: white"
+                @click="() => handleClick(index, column, item)">
+                <span>{{item}}</span>
+              </radial-menu-item>
+            </radial-menu>
+          </template>
+
 
         </div>
       </div>
@@ -35,6 +60,7 @@ import Vue from 'vue'
 import Component from 'vue-class-component'
 import { makepuzzle, solvepuzzle } from 'sudoku'
 import isEqual from 'lodash.isequal'
+import { RadialMenu, RadialMenuItem } from 'vue-radial-menu'
 
 const fixPuzzle = item => item === null ? null : item + 1
 const rawPuzzle = [null, 8, 2, null, 7, null, 1, null, null, 1, 4, null, null, null, null, null, null, null, null, null, null, 5, null, 6, null, null, null, 3, 7, null, null, null, 0, null, null, null, null, null, null, 7, null, null, null, 6, null, null, null, null, 1, null, null, 3, null, null, null, 6, null, null, null, null, null, 0, 2, null, 0, null, 6, null, 4, null, null, null, null, 5, 4, null, 0, null, null, null, null]
@@ -55,15 +81,25 @@ const generatePuzzle = (arr) => {
 }
 const puzzle = generatePuzzle(rawPuzzle)
 
-@Component({})
+@Component({
+  components: {
+    RadialMenu,
+    RadialMenuItem
+  }
+})
 export default class Board extends Vue {
   puzzle = null
   solvePuzzle = null
-  helperNumberOptions = Array.from({ length: 9 }, (v, k) => k + 1)
+  helperNumberOptions = [...Array.from({ length: 9 }, (v, k) => k + 1), '𝗫']
   helpNumber = null
 
   mounted () {
     this.newGame()
+  }
+
+  handleClick (index, column, item) {
+    console.log({index, column, item});
+    this.puzzle[index][column].value = item === '𝗫' ? null: item;
   }
 
   boldNumber (num) {
@@ -71,7 +107,7 @@ export default class Board extends Vue {
   }
 
   newGame () {
-    const rawPuzzle = makepuzzle()
+    // const rawPuzzle = makepuzzle()
 
     const rawSolvePuzzle = solvepuzzle(rawPuzzle)
     const fixedSolvePuzzle = rawSolvePuzzle.map(fixPuzzle)
@@ -81,7 +117,7 @@ export default class Board extends Vue {
   }
 
   isNumber (event) {
-    const value = event.target.value;
+    const value = event.target.value
     const re = new RegExp('^([1-9])$')
     if (re.test(value)) {
       return event.preventDefault()
@@ -131,7 +167,34 @@ export default class Board extends Vue {
 
 
       .board__column {
+        position: relative;
         box-sizing: content-box;
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        &.read-only {
+          background: rgba(#b06ab3, 0.5);
+        }
+
+        .selected-value {
+          position: absolute;
+          margin: auto;
+          z-index: 3;
+          pointer-events: none;
+        }
+
+        & /deep/ {
+          .vue-radial-menu-container {
+            color: transparent;
+            opacity: 0;
+          }
+          .vue-radial-menu-wrapper{
+            box-shadow: none;
+          }
+          .vue-radial-menu-item{
+            z-index: 10;
+          }
+        }
 
         &:nth-child(3), &:nth-child(6) {
           border-right: 2px solid black;
@@ -146,9 +209,9 @@ export default class Board extends Vue {
     text-align: center;
     height: 60px;
     width: 60px;
-    font-size: 2rem;
+    /*font-size: 2rem;*/
     border: none;
-    @media only screen and (max-width: 600px)  {
+    @media only screen and (max-width: 600px) {
       height: 35px;
       width: 30px;
       font-size: 1.2rem;
