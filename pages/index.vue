@@ -4,17 +4,20 @@
       <h1 class="title text-4xl">
         sudoku
       </h1>
-      <board/>
+      <radial-input/>
+      <board v-if="false"/>
     </div>
   </div>
 </template>
 
 <script>
 import Board from '@/components/board';
+import RadialInput from '@/components/radial-input';
 
 export default {
   components: {
-    Board
+    Board,
+    RadialInput
   }
 }
 </script>
