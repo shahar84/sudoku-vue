@@ -17,8 +17,7 @@ import Component from 'vue-class-component'
 
 @Component({
   components: {
-    Board,
-    RadialInput
+    Board
   }
 })
 export default class Index extends Vue {
