@@ -98,7 +98,6 @@ export default class Board extends Vue {
   }
 
   handleClick (index, column, item) {
-    console.log({index, column, item});
     this.puzzle[index][column].value = item === '𝗫' ? null: item;
   }
 
@@ -190,6 +189,12 @@ export default class Board extends Vue {
           }
           .vue-radial-menu-wrapper{
             box-shadow: none;
+            border-radius: unset;
+            @media only screen and (max-width: 600px) {
+
+              max-width: 30px;
+              max-height: 35px;
+            }
           }
           .vue-radial-menu-item{
             z-index: 10;
