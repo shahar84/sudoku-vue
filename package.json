@@ -16,7 +16,7 @@
     "@nuxtjs/axios": "^5.3.6",
     "@nuxtjs/bulma": "^1.2.4",
     "lodash.isequal": "^4.5.0",
-    "nuxt": "^2.0.0",
+    "nuxt": "^2.15.8",
     "sudoku": "0.0.2",
     "vue": "^2.6.10",
     "vue-class-component": "^7.1.0",
